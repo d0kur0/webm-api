@@ -1,4 +1,4 @@
-package main
+package webm_api
 
 import (
 	"fmt"
