@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"webmApi/tasks/grabberTask"
+
+	"github.com/d0kur0/webm-api/tasks/grabberTask"
 
 	"github.com/ztrue/tracerr"
 )

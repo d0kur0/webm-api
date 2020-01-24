@@ -1,4 +1,4 @@
-module webmApi
+module github.com/d0kur0/webm-api
 
 go 1.13
 

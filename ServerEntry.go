@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"webmApi/httpHandlers/filesHttpHandler"
-	"webmApi/httpHandlers/schemaHttpHandler"
-	"webmApi/tasks/grabberTask"
+
+	"github.com/d0kur0/webm-api/httpHandlers/filesHttpHandler"
+	"github.com/d0kur0/webm-api/httpHandlers/schemaHttpHandler"
+	"github.com/d0kur0/webm-api/tasks/grabberTask"
 
 	"github.com/gorilla/mux"
 	"github.com/ztrue/tracerr"
