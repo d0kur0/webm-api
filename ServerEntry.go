@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"webmApi/filesDaemon"
-	"webmApi/httpActions"
+	"webmApi/httpHandlers/filesHttpHandler"
+	"webmApi/httpHandlers/schemaHttpHandler"
+	"webmApi/tasks/grabberTask"
 
 	"github.com/gorilla/mux"
 	"github.com/ztrue/tracerr"
 )
+
+const port = "3500"
 
 func main() {
 	defer func() {
@@ -17,13 +21,16 @@ func main() {
 		}
 	}()
 
+	grabberTask.Start()
+
 	r := mux.NewRouter()
-	r.HandleFunc("/getSchema", httpActions.GetSchema)
-	r.HandleFunc("/getFiles", httpActions.GetFiles)
+	r.HandleFunc("/schema/get", schemaHttpHandler.GetSchema).Methods("GET")
+	r.HandleFunc("/files/getByStruct", filesHttpHandler.GetFilesByStruct).Methods("POST")
+	r.HandleFunc("/files/getAll", filesHttpHandler.GetAll).Methods("GET")
 
-	filesDaemon.Start()
-
-	if err := http.ListenAndServe(":3500", r); err != nil {
+	if err := http.ListenAndServe(":"+port, r); err != nil {
 		tracerr.PrintSourceColor(tracerr.Wrap(err))
 	}
+
+	log.Println("Server started at " + port + " port")
 }

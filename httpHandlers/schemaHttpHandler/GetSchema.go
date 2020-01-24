@@ -1,15 +1,15 @@
-package httpActions
+package schemaHttpHandler
 
 import (
 	"encoding/json"
 	"net/http"
-	"webmApi/filesDaemon"
+	"webmApi/tasks/grabberTask"
 
 	"github.com/ztrue/tracerr"
 )
 
-func GetSchema(response http.ResponseWriter, request *http.Request) {
-	var grabberSchema = filesDaemon.GetGrabberSchema()
+func GetSchema(w http.ResponseWriter, r *http.Request) {
+	var grabberSchema = grabberTask.GetGrabberSchema()
 	var responseData = make(map[string][]string, len(grabberSchema))
 
 	for _, schema := range grabberSchema {
@@ -23,14 +23,14 @@ func GetSchema(response http.ResponseWriter, request *http.Request) {
 
 	jsonBytes, err := json.Marshal(responseData)
 	if err != nil {
-		tracerr.PrintSourceColor(tracerr.New("JSON marshal error"))
-		http.Error(response, "Server Error", http.StatusInternalServerError)
+		tracerr.PrintSourceColor(tracerr.Wrap(err))
+		http.Error(w, "Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	response.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 
-	if _, err = response.Write(jsonBytes); err != nil {
+	if _, err = w.Write(jsonBytes); err != nil {
 		tracerr.PrintSourceColor(tracerr.New("Write response error"))
 	}
 }
