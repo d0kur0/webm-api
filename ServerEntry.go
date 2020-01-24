@@ -21,7 +21,7 @@ func main() {
 		}
 	}()
 
-	grabberTask.Start()
+	go grabberTask.Start()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/schema/get", schemaHttpHandler.GetSchema).Methods("GET")
