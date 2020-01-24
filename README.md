@@ -42,9 +42,9 @@
         {
           "Files": [
             {
-              "Name": "15790813342170.webm"
-              "Path": "https://2ch.hk//b/src/21…1874/15798954688140.webm"
-              "Preview": "https://2ch.hk//b/thumb/…1874/15798954688140s.jpg"
+              "Name": "15790813342170.webm",
+              "Path": "https://2ch.hk//b/src/21…1874/15798954688140.webm",
+              "Preview": "https://2ch.hk//b/thumb/…1874/15798954688140s.jpg",
               "ThreadId": 212221874
             }
           ]
