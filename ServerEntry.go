@@ -10,7 +10,6 @@ import (
 	"github.com/d0kur0/webm-api/tasks/grabberTask"
 
 	"github.com/gorilla/mux"
-	"github.com/ztrue/tracerr"
 )
 
 const port = "3500"
@@ -24,14 +23,14 @@ func main() {
 
 	go grabberTask.Start()
 
-	r := mux.NewRouter()
-	r.HandleFunc("/schema/get", schemaHttpHandler.GetSchema).Methods("GET")
-	r.HandleFunc("/files/getByStruct", filesHttpHandler.GetFilesByStruct).Methods("POST")
-	r.HandleFunc("/files/getAll", filesHttpHandler.GetAll).Methods("GET")
+	router := mux.NewRouter()
+	router.HandleFunc("/schema/get", schemaHttpHandler.GetSchema).Methods("GET")
+	router.HandleFunc("/files/getByStruct", filesHttpHandler.GetFilesByStruct).Methods("POST")
+	router.HandleFunc("/files/getAll", filesHttpHandler.GetAll).Methods("GET")
 
-	if err := http.ListenAndServe(":"+port, r); err != nil {
-		tracerr.PrintSourceColor(tracerr.Wrap(err))
+	if err := http.ListenAndServe(":"+port, router); err != nil {
+		log.Println("Starting server failed: ", err)
 	}
 
-	log.Println("Server started at " + port + " port")
+	log.Println("Server started at port:", port)
 }

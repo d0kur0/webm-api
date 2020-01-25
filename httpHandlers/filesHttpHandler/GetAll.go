@@ -2,11 +2,10 @@ package filesHttpHandler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/d0kur0/webm-api/tasks/grabberTask"
-
-	"github.com/ztrue/tracerr"
 )
 
 func GetAll(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +13,7 @@ func GetAll(w http.ResponseWriter, r *http.Request) {
 
 	jsonBytes, err := json.Marshal(output)
 	if err != nil {
-		tracerr.PrintSourceColor(err)
+		log.Println("Marshaling output failed:", err)
 		http.Error(w, "Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -23,6 +22,6 @@ func GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if _, err = w.Write(jsonBytes); err != nil {
-		tracerr.PrintSourceColor(tracerr.New("Write response error"))
+		log.Println("Writing response failed:", err)
 	}
 }

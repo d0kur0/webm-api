@@ -2,11 +2,10 @@ package schemaHttpHandler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/d0kur0/webm-api/tasks/grabberTask"
-
-	"github.com/ztrue/tracerr"
 )
 
 func GetSchema(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +23,7 @@ func GetSchema(w http.ResponseWriter, r *http.Request) {
 
 	jsonBytes, err := json.Marshal(responseData)
 	if err != nil {
-		tracerr.PrintSourceColor(tracerr.Wrap(err))
+		log.Println("Marshaling output failed:", err)
 		http.Error(w, "Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -33,6 +32,6 @@ func GetSchema(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if _, err = w.Write(jsonBytes); err != nil {
-		tracerr.PrintSourceColor(tracerr.New("Write response error"))
+		log.Println("Writing response failed:", err)
 	}
 }

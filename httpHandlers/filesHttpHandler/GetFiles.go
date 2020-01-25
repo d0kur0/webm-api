@@ -3,24 +3,23 @@ package filesHttpHandler
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/d0kur0/webm-api/tasks/grabberTask"
-
-	"github.com/ztrue/tracerr"
 )
 
 func GetFilesByStruct(w http.ResponseWriter, r *http.Request) {
 	var requestSchema requestSchema
 	var requestBody, err = ioutil.ReadAll(r.Body)
 	if err != nil {
-		tracerr.PrintSourceColor(tracerr.Wrap(err))
+		log.Println("Reading response body failed:", err)
 		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
 	}
 
 	if err := json.Unmarshal(requestBody, &requestSchema); err != nil {
-		tracerr.PrintSourceColor(tracerr.Wrap(err))
+		log.Println("Unmarshal request body failed:", err)
 		http.Error(w, "Server error", http.StatusInternalServerError)
 		return
 	}
@@ -49,7 +48,7 @@ func GetFilesByStruct(w http.ResponseWriter, r *http.Request) {
 
 	jsonBytes, err := json.Marshal(output)
 	if err != nil {
-		tracerr.PrintSourceColor(err)
+		log.Println("Marshaling output failed:", err)
 		http.Error(w, "Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -58,6 +57,6 @@ func GetFilesByStruct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if _, err = w.Write(jsonBytes); err != nil {
-		tracerr.PrintSourceColor(tracerr.New("Write response error"))
+		log.Println("Writing response failed:", err)
 	}
 }
