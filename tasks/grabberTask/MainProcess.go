@@ -21,11 +21,11 @@ func Start() {
 	grabberSchema = []types.GrabberSchema{
 		{
 			twoChannel.Make(allowedExtension),
-			[]types.Board{"b", "h", "fur"},
+			[]types.Board{"b", "vg", "a", "mu", "e", "h", "fur", "kpop", "asmr"},
 		},
 		{
 			fourChannel.Make(allowedExtension),
-			[]types.Board{"b", "e", "h", "u"},
+			[]types.Board{"a", "c", "cgl", "vg", "co", "g", "b", "mu", "s", "hc", "h", "e", "u", "d", "aco"},
 		},
 	}
 
