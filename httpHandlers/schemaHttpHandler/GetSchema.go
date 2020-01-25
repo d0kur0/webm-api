@@ -30,6 +30,7 @@ func GetSchema(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if _, err = w.Write(jsonBytes); err != nil {
 		tracerr.PrintSourceColor(tracerr.New("Write response error"))
