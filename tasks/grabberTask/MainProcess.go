@@ -3,11 +3,12 @@ package grabberTask
 import (
 	"log"
 
+	"github.com/d0kur0/webm-grabber/sources/twoChannel"
+
 	"github.com/jasonlvhit/gocron"
 
 	webmGrabber "github.com/d0kur0/webm-grabber"
 	"github.com/d0kur0/webm-grabber/sources/fourChannel"
-	"github.com/d0kur0/webm-grabber/sources/twoChannel"
 	"github.com/d0kur0/webm-grabber/sources/types"
 )
 
