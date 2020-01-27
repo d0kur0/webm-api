@@ -31,17 +31,18 @@ func GetFilesByStruct(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		for board := range boards {
+		for boardIndex, board := range boards {
 			exists := false
 			for _, requestBoard := range requestSchema.Vendors[vendor] {
-				if requestBoard == board {
+				if requestBoard == board.Name {
 					exists = true
 					break
 				}
 			}
 
 			if !exists {
-				delete(output.Vendors[vendor], board)
+				output.Vendors[vendor][len(output.Vendors[vendor])-1], output.Vendors[vendor][boardIndex] = output.Vendors[vendor][boardIndex], output.Vendors[vendor][len(output.Vendors[vendor])-1]
+				output.Vendors[vendor] = output.Vendors[vendor][:len(output.Vendors[vendor])-1]
 			}
 		}
 	}

@@ -31,6 +31,5 @@ func main() {
 	if err := http.ListenAndServe(":"+port, router); err != nil {
 		log.Println("Starting server failed: ", err)
 	}
-
 	log.Println("Server started at port:", port)
 }

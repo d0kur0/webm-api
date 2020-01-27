@@ -10,12 +10,12 @@ import (
 
 func GetSchema(w http.ResponseWriter, r *http.Request) {
 	var grabberSchema = grabberTask.GetGrabberSchema()
-	var responseData = make(map[string][]string, len(grabberSchema))
+	var responseData = make(responseSchema, len(grabberSchema))
 
 	for _, schema := range grabberSchema {
-		var boards []string
+		var boards []responseBoard
 		for _, board := range schema.Boards {
-			boards = append(boards, board.String())
+			boards = append(boards, responseBoard{board.Name, board.Description})
 		}
 
 		responseData[schema.Vendor.VendorName()] = boards
