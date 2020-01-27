@@ -1,4 +1,5 @@
 .idea
 webm-api.iml
 go.sum
-webmApi.exe
+webm-api.exe
+webm-api
