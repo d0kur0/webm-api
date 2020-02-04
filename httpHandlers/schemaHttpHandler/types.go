@@ -1,8 +1,8 @@
 package schemaHttpHandler
 
 type responseBoard struct {
-	Name        string
-	Description string
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type responseSchema map[string][]responseBoard
