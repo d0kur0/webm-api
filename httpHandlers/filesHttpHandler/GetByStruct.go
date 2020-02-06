@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/d0kur0/webm-grabber/sources/types"
+
 	"github.com/d0kur0/webm-api/tasks/grabberTask"
 )
 
@@ -24,30 +26,36 @@ func GetFilesByStruct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var output = grabberTask.GetOutput()
-	for vendor, boards := range output.Vendors {
-		if _, exists := requestSchema.Vendors[vendor]; !exists {
-			delete(output.Vendors, vendor)
-			continue
-		}
+	var responseOutput = types.Output{}
+	responseOutput.Vendors = make(types.OutputVendors, len(requestSchema.Vendors))
 
-		for boardIndex, board := range boards {
-			exists := false
-			for _, requestBoard := range requestSchema.Vendors[vendor] {
-				if requestBoard == board.Name {
-					exists = true
-					break
+	for vendor, boards := range grabberTask.GetOutput().Vendors {
+		if _, exists := requestSchema.Vendors[vendor]; exists {
+			var outputBoards []types.OutputBoard
+
+			for _, board := range boards {
+				exists := false
+				for _, requestBoard := range requestSchema.Vendors[vendor] {
+					if requestBoard == board.Name {
+						exists = true
+						break
+					}
+				}
+
+				if exists {
+					outputBoards = append(outputBoards, types.OutputBoard{
+						Name:        board.Name,
+						Description: board.Description,
+						Threads:     board.Threads,
+					})
 				}
 			}
 
-			if !exists {
-				output.Vendors[vendor][len(output.Vendors[vendor])-1], output.Vendors[vendor][boardIndex] = output.Vendors[vendor][boardIndex], output.Vendors[vendor][len(output.Vendors[vendor])-1]
-				output.Vendors[vendor] = output.Vendors[vendor][:len(output.Vendors[vendor])-1]
-			}
+			responseOutput.Vendors[vendor] = outputBoards
 		}
 	}
 
-	jsonBytes, err := json.Marshal(output)
+	jsonBytes, err := json.Marshal(responseOutput)
 	if err != nil {
 		log.Println("Marshaling output failed:", err)
 		http.Error(w, "Server Error", http.StatusInternalServerError)
