@@ -2,6 +2,7 @@ package grabberSchemaHelper
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -34,11 +35,11 @@ func (schema *grabberSchema) createConfigFromDefault() error {
 
 	jsonBytes, err := json.MarshalIndent(configData, "", "\t")
 	if err != nil {
-		return errors.Wrap(err, "Marshaling config error")
+		return errors.Wrap(err, fmt.Sprintf("Marshaling config error (%s)", schema.configFilePath))
 	}
 
 	if err := ioutil.WriteFile(schema.configFilePath, jsonBytes, 0644); err != nil {
-		return errors.Wrap(err, "Write in config data file error")
+		return errors.Wrap(err, fmt.Sprintf("Write in config data file error (%s)", schema.configFilePath))
 	}
 
 	return nil
@@ -51,12 +52,12 @@ func (schema *grabberSchema) parseConfig() (err error) {
 
 	jsonData, err := ioutil.ReadFile(schema.configFilePath)
 	if err != nil {
-		return errors.Wrap(err, "Read config file error")
+		return errors.Wrap(err, fmt.Sprintf("Read config file error (%s)", schema.configFilePath))
 	}
 
 	var configData configStruct
 	if err := json.Unmarshal(jsonData, &configData); err != nil {
-		return errors.Wrap(err, "Unmarshal config file error")
+		return errors.Wrap(err, fmt.Sprintf("Unmarshal config file error (%s)", schema.configFilePath))
 	}
 
 	schema.allowedExtensions = configData.AllowedExtensions
@@ -80,7 +81,7 @@ func (schema *grabberSchema) Get() []types.GrabberSchema {
 }
 
 func Make() (schema *grabberSchema) {
-	schema = &grabberSchema{configFilePath: "config.json"}
+	schema = &grabberSchema{configFilePath: "schema.json"}
 
 	// Default settings
 	schema.allowedExtensions = types.AllowedExtensions{".webm", ".mp4"}
