@@ -11,18 +11,16 @@ import (
 	"github.com/d0kur0/webm-grabber/sources/types"
 )
 
-const taskInterval = 10
-
 var output types.Output
 var grabberSchema = grabberSchemaHelper.Make()
 
-func Start() {
+func Start(updateInterval uint64) {
 	log.Println("First start, grabbing files...")
 	output = webmGrabber.GrabberProcess(grabberSchema.Get())
 	log.Println("Grabbing ended")
 
 	log.Println("Start grabberTask")
-	gocron.Every(taskInterval).Minutes().DoSafely(func() {
+	gocron.Every(updateInterval).Minutes().DoSafely(func() {
 		output = webmGrabber.GrabberProcess(grabberSchema.Get())
 		log.Println("GrabberTask: update files")
 	})
