@@ -3,7 +3,7 @@ module github.com/d0kur0/webm-api
 go 1.13
 
 require (
-	github.com/d0kur0/webm-grabber v0.0.0-20200206135053-0d5fdb06fd26
+	github.com/d0kur0/webm-grabber v0.0.0-20200206141602-9773df228117
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.3
 	github.com/jasonlvhit/gocron v0.0.0-20191228163020-98b59b546dee
