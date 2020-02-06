@@ -1,9 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/pkg/errors"
 
 	"github.com/d0kur0/webm-api/httpHandlers/filesHttpHandler"
 	"github.com/d0kur0/webm-api/httpHandlers/schemaHttpHandler"
@@ -12,7 +17,43 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const port = "3500"
+type ServerConfig struct {
+	Port           int
+	UpdateInterval uint64
+}
+
+func parseServerConfig() (config ServerConfig, err error) {
+	const configFilePath = "serverConfig.json"
+	const defaultPort = 3500
+	const defaultUpdateInterval = 10
+
+	config = ServerConfig{
+		Port:           defaultPort,
+		UpdateInterval: defaultUpdateInterval,
+	}
+
+	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
+		jsonBytes, err := json.MarshalIndent(config, "", "\t")
+		if err != nil {
+			return config, errors.Wrap(err, fmt.Sprintf("Marshaling config error (%s)", configFilePath))
+		}
+
+		if err := ioutil.WriteFile(configFilePath, jsonBytes, 0644); err != nil {
+			return config, errors.Wrap(err, fmt.Sprintf("Write in config data file error (%s)", configFilePath))
+		}
+	} else {
+		jsonData, err := ioutil.ReadFile(configFilePath)
+		if err != nil {
+			return config, errors.Wrap(err, fmt.Sprintf("Read config file error (%s)", configFilePath))
+		}
+
+		if err := json.Unmarshal(jsonData, &config); err != nil {
+			return config, errors.Wrap(err, fmt.Sprintf("Unmarshal config file error (%s)", configFilePath))
+		}
+	}
+
+	return
+}
 
 func main() {
 	defer func() {
@@ -21,7 +62,13 @@ func main() {
 		}
 	}()
 
-	go grabberTask.Start()
+	config, err := parseServerConfig()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	go grabberTask.Start(config.UpdateInterval)
 
 	router := mux.NewRouter()
 	router.Use(accessControlMiddleware)
@@ -29,10 +76,10 @@ func main() {
 	router.HandleFunc("/files/getByStruct", filesHttpHandler.GetFilesByStruct).Methods("POST", "OPTIONS")
 	router.HandleFunc("/files/getAll", filesHttpHandler.GetAll).Methods("GET")
 
-	if err := http.ListenAndServe(":"+port, router); err != nil {
+	log.Println("Server started at port:", config.Port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), router); err != nil {
 		log.Println("Starting server failed: ", err)
 	}
-	log.Println("Server started at port:", port)
 }
 
 func accessControlMiddleware(next http.Handler) http.Handler {
