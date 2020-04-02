@@ -3,4 +3,4 @@ webm-api.iml
 go.sum
 schema.json
 serverConfig.json
-./build
+build
