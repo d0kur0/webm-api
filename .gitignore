@@ -1,9 +1,6 @@
 .idea
 webm-api.iml
 go.sum
-webm-api.exe
-webm-api
-config.json
 schema.json
 serverConfig.json
-webm-api
+./build
