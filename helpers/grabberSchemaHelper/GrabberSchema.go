@@ -95,6 +95,8 @@ func Make() (schema *grabberSchema) {
 				{"mu", "Музыка"},
 				{"kpop", "K-Pop"},
 				{"asmr", "ASMR"},
+				{"fur", "Furry"},
+				{"h", "Hentai"},
 			},
 		},
 		{
