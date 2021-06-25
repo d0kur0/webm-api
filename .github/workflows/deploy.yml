@@ -25,8 +25,8 @@ jobs:
       - run: go get -u -v
       - run: go build
       # Deploy
-      - run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress myclients-api ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:/tmp
-      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo systemctl stop myclients-api'
-      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo mv /tmp/myclients-api ${{ secrets.DEPLOY_TARGET_PATH }}'
-      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo chown -R myclients-api-service:myclients-api-service ${{ secrets.DEPLOY_TARGET_PATH }}'
-      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo systemctl start myclients-api'
+      - run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress webm-api ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:/tmp
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo systemctl stop webm-api'
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo mv /tmp/webm-api ${{ secrets.DEPLOY_TARGET_PATH }}'
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo chown -R webm-api-service:webm-api-service ${{ secrets.DEPLOY_TARGET_PATH }}'
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo systemctl start webm-api'
