@@ -1,0 +1,8 @@
+{
+  "port": 3000,
+  "schema": {
+    "2ch": ["b", "media"],
+    "4chan": ["b"]
+  },
+  "extensions": ["webm", "mp4"]
+}

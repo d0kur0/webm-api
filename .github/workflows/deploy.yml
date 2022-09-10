@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        go-version: [ 1.16.x ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+      - uses: actions/checkout@v2
+      # Setup key
+      - run: set -eu
+      - run: mkdir "$HOME/.ssh"
+      - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
+      - run: chmod 600 "$HOME/.ssh/key"
+      # Build
+      - run: go get -u -v
+      - run: go build
+      # Deploy
+      - run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress webm-api ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:/tmp
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo systemctl stop webm-api'
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo mv /tmp/webm-api ${{ secrets.DEPLOY_TARGET_PATH }}'
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo chown -R webm-api-service:webm-api-service ${{ secrets.DEPLOY_TARGET_PATH }}'
+      - run: ssh -o "IdentitiesOnly=yes" -o "StrictHostKeyChecking=no" -i $HOME/.ssh/key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} 'sudo systemctl start webm-api'
