@@ -1,8 +1,9 @@
 {
   "port": 3000,
+  "updateInterval": 10,
   "schema": {
     "2ch": ["b", "media"],
     "4chan": ["b"]
   },
-  "extensions": ["webm", "mp4"]
+  "extensions": [".webm", ".mp4"]
 }

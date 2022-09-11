@@ -26,9 +26,10 @@ var schema []types.GrabberSchema
 var output types.Output
 
 type Config struct {
-	Port       int
-	Schema     map[string][]string
-	Extensions types.AllowedExtensions
+	Port           int
+	Schema         map[string][]string
+	Extensions     types.AllowedExtensions
+	UpdateInterval int
 }
 
 func readConfig() (config Config, err error) {
@@ -63,15 +64,14 @@ func schedule(what func(), delay time.Duration) chan bool {
 
 func updateTick() {
 	output = webmGrabber.GrabberProcess(schema)
-	log.Println("Update tick done.", output)
+}
+
+type SimplifySchemaItem struct {
+	Vendor string   `json:"vendor"`
+	Boards []string `json:"board"`
 }
 
 func HttpGetSchema(w http.ResponseWriter, r *http.Request) {
-	type SimplifySchemaItem struct {
-		Vendor string
-		Boards []string
-	}
-
 	var simplifySchema []SimplifySchemaItem
 	for _, schemaEl := range schema {
 		var boards []string
@@ -108,6 +108,51 @@ func HttpGetFiles(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type GetFilesCondition map[string][]string
+
+func HttpGetFilesByCondition(w http.ResponseWriter, r *http.Request) {
+	var condition GetFilesCondition
+	err := json.NewDecoder(r.Body).Decode(&condition)
+	if err != nil {
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	var filteredFiles types.Output
+	for _, outItem := range output {
+		boards, isDesiredVendor := condition[outItem.VendorName]
+		if !isDesiredVendor {
+			continue
+		}
+
+		isDesiredBoard := false
+		for _, board := range boards {
+			if board == outItem.BoardName {
+				isDesiredBoard = true
+				break
+			}
+		}
+
+		if !isDesiredBoard {
+			continue
+		}
+
+		filteredFiles = append(filteredFiles, outItem)
+	}
+
+	outputAsBytes, err := json.Marshal(filteredFiles)
+	if err != nil {
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = io.WriteString(w, string(outputAsBytes))
+	if err != nil {
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+}
+
 func main() {
 	config, err := readConfig()
 	if err != nil {
@@ -124,9 +169,9 @@ func main() {
 			})
 		}
 
-		var vendorInstances map[string]types.VendorInterface
-		vendorInstances[TwoChName] = twoChannel.Make(types.AllowedExtensions{})
-		vendorInstances[FourChName] = fourChannel.Make(types.AllowedExtensions{})
+		var vendorInstances = make(map[string]types.VendorInterface)
+		vendorInstances[TwoChName] = twoChannel.Make(config.Extensions)
+		vendorInstances[FourChName] = fourChannel.Make(config.Extensions)
 
 		vendorInstance, isExists := vendorInstances[vendor]
 		if !isExists {
@@ -137,10 +182,12 @@ func main() {
 		schema = append(schema, types.GrabberSchema{Vendor: vendorInstance, Boards: filledBoards})
 	}
 
-	schedule(updateTick, 5*time.Minute)
+	schedule(updateTick, time.Duration(config.UpdateInterval)*time.Minute)
+	output = webmGrabber.GrabberProcess(schema)
 
 	http.HandleFunc("/schema", HttpGetSchema)
 	http.HandleFunc("/files", HttpGetFiles)
+	http.HandleFunc("/filesByCondition", HttpGetFilesByCondition)
 
 	err = http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil)
 	if err != nil {

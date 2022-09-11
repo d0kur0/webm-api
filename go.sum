@@ -1,5 +1,3 @@
-github.com/d0kur0/webm-grabber v0.0.0-20220131171234-6fb7c8ffea04 h1:URF9tYpum8hsnJnnEU64e2k4TeDH929xoaeWHHRNpZ4=
-github.com/d0kur0/webm-grabber v0.0.0-20220131171234-6fb7c8ffea04/go.mod h1:ARG+RqqR7cDRNSgew4Dsr3fAwMVz2qEPZqEKUyqw9a8=
 github.com/d0kur0/webm-grabber v0.0.0-20220911002917-0a1d5cfc19e5 h1:5jVhyb46EB0nFOYYrssgY2BxhsEvEMGn2n7W3NW8TaU=
 github.com/d0kur0/webm-grabber v0.0.0-20220911002917-0a1d5cfc19e5/go.mod h1:ARG+RqqR7cDRNSgew4Dsr3fAwMVz2qEPZqEKUyqw9a8=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
