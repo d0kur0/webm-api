@@ -63,7 +63,7 @@ func schedule(what func(), delay time.Duration) chan bool {
 
 func updateTick() {
 	output = webmGrabber.GrabberProcess(schema)
-	log.Println("Update tick done.")
+	log.Println("Update tick done.", output)
 }
 
 func HttpGetSchema(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +81,7 @@ func HttpGetSchema(w http.ResponseWriter, r *http.Request) {
 		simplifySchema = append(simplifySchema, SimplifySchemaItem{Vendor: schemaEl.Vendor.VendorName(), Boards: boards})
 	}
 
-	schemaAsBytes, err := json.Marshal(schema)
+	schemaAsBytes, err := json.Marshal(simplifySchema)
 	if err != nil {
 		http.Error(w, "", http.StatusInternalServerError)
 		return
@@ -109,35 +109,11 @@ func HttpGetFiles(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Println(`
-******************************************** WEBM API ********************************************
-*                                                                                                *
-*  HTTP Endpoints:                                                                               *
-*                                                                                                *
-*    Get current server grabber schema: [request type: GET]                                      *
-*    http://localhost:3000/schema                                                                *
-*                                                                                                *
-*    Get all grabbed files: [request type: GET]                                                  *
-*    http://localhost:3000/files                                                                 *
-*                                                                                                *
-*    Get grabbed files by specific vendor and boards: [request type: POST]                       *
-*    http://localhost:3000/filesWithCondition                                                    *
-*        This request need body with condition struct:                                           *
-*                { "<vendor name from grabber schema>": ["<board name1>", "<board name 2>"] }    *
-*                For example:                                                                    *
-*                { "2ch": ["b", "media", "vg"], "4chan": ["b"] }                                 *
-*                                                                                                *
-**************************************************************************************************
-	`)
-
 	config, err := readConfig()
 	if err != nil {
 		log.Fatalln(err)
 		return
 	}
-
-	twoCh := twoChannel.Make(types.AllowedExtensions{})
-	fourCh := fourChannel.Make(types.AllowedExtensions{})
 
 	for vendor, boards := range config.Schema {
 		var filledBoards []types.Board
@@ -148,26 +124,20 @@ func main() {
 			})
 		}
 
-		var vendorInstance *types.VendorInterface
-		if vendor == TwoChName {
-			vendorInstance = &twoCh
-		}
-		if vendor == FourChName {
-			vendorInstance = &fourCh
-		}
+		var vendorInstances map[string]types.VendorInterface
+		vendorInstances[TwoChName] = twoChannel.Make(types.AllowedExtensions{})
+		vendorInstances[FourChName] = fourChannel.Make(types.AllowedExtensions{})
 
-		if vendorInstance == nil {
+		vendorInstance, isExists := vendorInstances[vendor]
+		if !isExists {
 			log.Fatalln("Undefined vendor from config file")
 			return
 		}
 
-		schema = append(schema, types.GrabberSchema{Vendor: *vendorInstance, Boards: filledBoards})
+		schema = append(schema, types.GrabberSchema{Vendor: vendorInstance, Boards: filledBoards})
 	}
 
-	log.Println("> First grabbing files, before startup http server...")
-	output = webmGrabber.GrabberProcess(schema)
-	log.Println("> Files grabbed.")
-	schedule(updateTick, 1*time.Minute)
+	schedule(updateTick, 5*time.Minute)
 
 	http.HandleFunc("/schema", HttpGetSchema)
 	http.HandleFunc("/files", HttpGetFiles)
