@@ -1,10 +1,10 @@
-commitFormat: angular
+  commitFormat: angular
 branch:
   master: release
 release: 'github'
 github:
-  repo: "webm-api"
-  user: "d0kur0"
+  repo: "go-semantic-release"
+  user: "nightapes"
 assets:
   - name: ./build/webm-api_windows_amd64.exe
     compress: false
