@@ -6,9 +6,13 @@ github:
   repo: "webm-api"
   user: "d0kur0"
 assets:
-  - name: ./build/go-semantic-release
+  - name: ./build/webm-api_windows_amd64.exe
     compress: false
-  - name: ./build/go-semantic-release.exe
+  - name: ./build/webm-api_linux_amd64
+    compress: false
+  - name: ./build/webm-api_darwin_amd64
+    compress: false
+  - name: ./build/webm-api_darwin_arm64
     compress: false
 hooks:
   preRelease:

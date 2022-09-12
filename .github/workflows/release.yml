@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -15,4 +17,10 @@ jobs:
           go-version: '>=1.19.0'
       - run: wget https://github.com/Nightapes/go-semantic-release/releases/download/v2.1.0/go-semantic-release.linux_x86_64.zip
       - run: unzip go-semantic-release.linux_x86_64.zip
-      - run: ls
+      - run: mv go-semantic-release.linux_x86_64 releaser
+      - run: chmod +X releaser
+      - run: GOOS=windows GOARCH=amd64 go build -ldflags "--X main.version=`./go-semantic-release next`" -o "build/webm-api_windows_amd64.exe"
+      - run: GOOS=linux GOARCH=amd64 go build -ldflags "--X main.version=`./go-semantic-release next`" -o "build/webm-api_linux_amd64"
+      - run: GOOS=darwin GOARCH=amd64 go build -ldflags "--X main.version=`./go-semantic-release next`" -o "build/webm-api_darwin_amd64"
+      - run: GOOS=darwin GOARCH=amd64 go build -ldflags "--X main.version=`./go-semantic-release next`" -o "build/webm-api_darwin_arm64"
+      - run: ./releaser release
