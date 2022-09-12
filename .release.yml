@@ -1,4 +1,4 @@
-  commitFormat: angular
+commitFormat: angular
 branch:
   master: release
 release: 'github'
