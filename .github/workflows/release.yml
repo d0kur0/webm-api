@@ -6,23 +6,13 @@ on:
       - master
 
 jobs:
-  goreleaser:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          fetch-depth: 0
-      -
-        name: Set up Go
-        uses: actions/setup-go@v3
-      -
-        name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --rm-dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          go-version: '>=1.19.0'
+      - run: wget https://github.com/Nightapes/go-semantic-release/releases/download/v2.1.0/go-semantic-release.linux_x86_64.zip
+      - run: unzip go-semantic-release.linux_x86_64.zip
+      - run: ls

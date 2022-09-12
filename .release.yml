@@ -1,0 +1,17 @@
+commitFormat: angular
+branch:
+  master: release
+release: 'github'
+github:
+  repo: "webm-api"
+  user: "d0kur0"
+assets:
+  - name: ./build/go-semantic-release
+    compress: false
+  - name: ./build/go-semantic-release.exe
+    compress: false
+hooks:
+  preRelease:
+    - name: echo $RELEASE_VERSION
+  postRelease:
+    - name: echo $RELEASE_VERSION
