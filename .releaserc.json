@@ -12,7 +12,7 @@
       ]
     }],
     ["@semantic-release/exec", {
-      "prepareCmd" : "echo ${nextRelease.version} > version"
+      "prepareCmd" : "GOOS=windows GOARCH=amd64 go build -ldflags \"-X main.version=${nextRelease.version}\" -o build/webm-api_windows_amd64.exe && GOOS=linux GOARCH=amd64 go build -ldflags \"-X main.version=${nextRelease.version}\" -o build/webm-api_linux_amd64 && GOOS=darwin GOARCH=amd64 go build -ldflags \"-X main.version=${nextRelease.version}\" -o build/webm-api_darwin_amd64 && GOOS=darwin GOARCH=arm64 go build -ldflags \"-X main.version=${nextRelease.version}\" -o build/webm-api_darwin_arm64"
     }]
   ]
 }
