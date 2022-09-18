@@ -6,9 +6,6 @@
     "@semantic-release/github",
     "@semantic-release/npm",
     [
-      {
-        "publish": false
-      },
       "@semantic-release/git",
       {
         "assets": ["README.md"],
