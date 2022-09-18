@@ -22,5 +22,5 @@ jobs:
       - run: GOOS=windows GOARCH=amd64 go build -o "build/webm-api_windows_amd64.exe"
       - run: GOOS=linux GOARCH=amd64 go build -o "build/webm-api_linux_amd64"
       - run: GOOS=darwin GOARCH=amd64 go build -o "build/webm-api_darwin_amd64"
-      - run: GOOS=darwin GOARCH=amd64 go build -o "build/webm-api_darwin_arm64"
+      - run: GOOS=darwin GOARCH=arm64 go build -o "build/webm-api_darwin_arm64"
       - run: npx semantic-release
