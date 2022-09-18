@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - run: npm i @semantic-release/git @semantic-release/github @semantic-release/npm
+      - run: npm i @semantic-release/git @semantic-release/github @semantic-release/exec
       - uses: actions/setup-go@v3
         with:
           go-version: '>=1.19.0'
