@@ -3,7 +3,14 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    "@semantic-release/github",
+    ["@semantic-release/github", {
+      "assets": [
+        { "path": "build/webm-api_windows_amd64.exe", "label": "Windows amd64" },
+        { "path": "build/webm-api_linux_amd64", "label": "Linux amd64" },
+        { "path": "build/webm-api_darwin_amd64", "label": "MacOS Darwin amd64 (Intel)" },
+        { "path": "build/webm-api_darwin_arm64", "label": "MacOS Darwin arm64 (M1)" }
+      ]
+    }],
     ["@semantic-release/exec", {
       "prepareCmd" : "echo ${nextRelease.version} > version"
     }]
