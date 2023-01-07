@@ -21,6 +21,10 @@ func Start() error {
 		AllowMethods: []string{http.MethodGet, http.MethodPost},
 	}))
 
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 5,
+	}))
+
 	e.GET("/schema", getSchema)
 	e.GET("/files", getFiles)
 	e.POST("/filesByCondition", getFilesByCondition)
