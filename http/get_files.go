@@ -1,23 +1,13 @@
 package http
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 
 	"github.com/d0kur0/webm-api/worker"
 )
 
-func getFiles(w http.ResponseWriter, _ *http.Request) {
-	outputAsBytes, err := json.Marshal(worker.GrabbingOutPut)
-	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
-		return
-	}
-
-	_, err = io.WriteString(w, string(outputAsBytes))
-	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
-		return
-	}
+func getFiles(c echo.Context) error {
+	return c.JSON(http.StatusOK, worker.GrabbingOutPut)
 }

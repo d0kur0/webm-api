@@ -1,0 +1,20 @@
+### Get schema
+GET http://localhost:3000/schema
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/json", `Expected 'application/json' but received ${type}`);
+    });
+
+    client.test("Response is correct JSON struct", function() {
+        client.assert(Array.isArray(response.body), "Expected array of items");
+        client.assert("vendor" in response.body[0], "Expected vendor field in array element");
+        client.assert("boards" in response.body[0], "Expected boards field in array element");
+    });
+%}

@@ -1,23 +1,21 @@
 package http
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 
 	"github.com/d0kur0/webm-api/worker"
 
 	"github.com/d0kur0/webm-grabber/types"
 )
 
-type getFilesCondition map[string][]string
+type getFilesConditionRequest map[string][]string
 
-func getFilesByCondition(w http.ResponseWriter, r *http.Request) {
-	var condition getFilesCondition
-	err := json.NewDecoder(r.Body).Decode(&condition)
-	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
-		return
+func getFilesByCondition(c echo.Context) error {
+	var condition getFilesConditionRequest
+	if err := c.Bind(&condition); err != nil {
+		return err
 	}
 
 	var filteredFiles types.Output
@@ -42,15 +40,5 @@ func getFilesByCondition(w http.ResponseWriter, r *http.Request) {
 		filteredFiles = append(filteredFiles, outItem)
 	}
 
-	outputAsBytes, err := json.Marshal(filteredFiles)
-	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
-		return
-	}
-
-	_, err = io.WriteString(w, string(outputAsBytes))
-	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
-		return
-	}
+	return c.JSON(http.StatusOK, filteredFiles)
 }
