@@ -36,8 +36,9 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-		viper.AddConfigPath(home)
+		if err == nil {
+			viper.AddConfigPath(home)
+		}
 		viper.AddConfigPath(".")
 		viper.SetConfigType("json")
 		viper.SetConfigName(".webm-api")
