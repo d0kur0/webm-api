@@ -9,8 +9,9 @@ Usage:
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
+  init        Init base configuration
   start       Start http server
-  version     Print the version number of Hugo
+  version     Print the version number of webm-api
 
 Flags:
       --config string   config file (default is $CWD/.webm-pwa.json | $HOME/.webm-pwa.json)
@@ -32,7 +33,7 @@ http://localhost:3000/schema
 http://localhost:3000/files
                                                                                           
 #### Get grabbed files by specific vendor and boards: [request type: POST]                        
-http://localhost:3000/filesWithCondition
+http://localhost:3000/filesByCondition
 
 This request need body with condition struct:
 ```json
