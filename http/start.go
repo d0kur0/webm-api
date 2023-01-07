@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/d0kur0/webm-api/worker"
+
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/labstack/echo/v4"
@@ -12,6 +14,8 @@ import (
 )
 
 func Start() error {
+	worker.Init()
+
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

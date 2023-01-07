@@ -1,32 +1,21 @@
 package worker
 
 import (
+	"log"
 	"time"
+
+	"github.com/go-co-op/gocron"
 
 	"github.com/spf13/viper"
 )
 
-func schedule(what func(), delay time.Duration, firstInstant bool) chan bool {
-	stop := make(chan bool)
+func Init() {
+	grabbing()
 
-	if firstInstant {
-		what()
+	s := gocron.NewScheduler(time.UTC)
+	_, err := s.Every(viper.GetInt("updateInterval")).Minutes().Do(grabbing)
+	if err != nil {
+		log.Fatalln(err)
 	}
-
-	go func() {
-		for {
-			what()
-			select {
-			case <-time.After(delay):
-			case <-stop:
-				return
-			}
-		}
-	}()
-
-	return stop
-}
-
-func init() {
-	schedule(grabbing, time.Duration(viper.GetInt("updateInterval"))*time.Minute, true)
+	s.StartAsync()
 }
