@@ -53,6 +53,8 @@ github.com/d0kur0/webm-grabber v0.0.0-20220918114855-d3d3f970ff68 h1:ewpFLB0HoX1
 github.com/d0kur0/webm-grabber v0.0.0-20220918114855-d3d3f970ff68/go.mod h1:ARG+RqqR7cDRNSgew4Dsr3fAwMVz2qEPZqEKUyqw9a8=
 github.com/d0kur0/webm-grabber v0.0.0-20230107130505-340f725a8a2d h1:7vhEp90MsixlIn1VYLYp/aVWyOVKze0BUU3OYBwgOpI=
 github.com/d0kur0/webm-grabber v0.0.0-20230107130505-340f725a8a2d/go.mod h1:LeP4s0SpAfRKZjqNCaTvQMIL8hNMKKMIqR62Ca6RsWs=
+github.com/d0kur0/webm-grabber v0.0.0-20230109112659-061fdcbe3f30 h1:VV+jx6Fe+y5yxLlT6RqK8LL+ZfTv/17gG2hgStg90vA=
+github.com/d0kur0/webm-grabber v0.0.0-20230109112659-061fdcbe3f30/go.mod h1:LeP4s0SpAfRKZjqNCaTvQMIL8hNMKKMIqR62Ca6RsWs=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

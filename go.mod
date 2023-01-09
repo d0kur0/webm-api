@@ -5,7 +5,7 @@ go 1.19
 require github.com/pkg/errors v0.9.1
 
 require (
-	github.com/d0kur0/webm-grabber v0.0.0-20230107130505-340f725a8a2d
+	github.com/d0kur0/webm-grabber v0.0.0-20230109112659-061fdcbe3f30
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.14.0
