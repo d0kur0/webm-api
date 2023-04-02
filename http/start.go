@@ -31,6 +31,7 @@ func Start() error {
 
 	e.GET("/schema", getSchema)
 	e.GET("/files", getFiles)
+	e.GET("/proxy", Proxy)
 	e.POST("/filesByCondition", getFilesByCondition)
 
 	return e.Start(fmt.Sprintf(":%d", viper.GetInt("port")))
